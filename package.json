@@ -1,0 +1,22 @@
+{
+  "name": "money-flow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "money-flow.js",
+  "scripts": {
+    "start": "node money-flow.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eboukamza/money-flow.git"
+  },
+  "author": "Elias Zain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eboukamza/money-flow/issues"
+  },
+  "homepage": "https://github.com/eboukamza/money-flow#readme",
+  "dependencies": {
+    "ramda": "0.25.0"
+  }
+}

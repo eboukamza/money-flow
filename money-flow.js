@@ -1,6 +1,8 @@
+const {compose} = require('ramda')
+
 const rateAt = rate => amount => amount * rate
 const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amount) - min, 0)
-const taxBracket = (rate, interval) => amount => rate(interval(amount))
+const taxBracket = (rateAt, forInterval) => compose(rateAt, forInterval)
 const taxCollect = (amount) => (sum, tax) => sum + tax(amount);
 const netAfter = tax => amount => amount - tax(amount)
 const taxApply = (amount, tax) => tax(amount)
@@ -28,12 +30,17 @@ const afterIs = netAfter(is)
 const crgCrds = rateAt(0.172)
 const afterCrgCrds = netAfter(crgCrds)
 
-// All taxes
-const allTaxes = [afterIs, afterCrgCrds, afterIrDividendes]
-const netAfterAllTaxes = (amount) =>  allTaxes.reduce(taxApply, amount)
+// flat tax
+const flatTax = rateAt(0.3)
+const afterFlatTax = netAfter(flatTax)
 
-exports.netAfterAllTaxes = netAfterAllTaxes
+const withoutFlatTax = [afterIs, afterCrgCrds, afterIrDividendes]
+const withFlatTax = [afterIs, afterFlatTax]
+
+const delta = (amount) => withoutFlatTax.reduce(taxApply, amount) - withFlatTax.reduce(taxApply, amount)
+
+exports.delta = delta
 
 // try
-//const {netAfterAllTaxes} = require("./money-flow.js")
-//netAfterAllTaxes(50000) // 458038.092864
+//const {delta} = require("./money-flow.js")
+//delta(100000) // 4087.5941759999987
