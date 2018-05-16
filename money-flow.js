@@ -9,11 +9,9 @@ let bracket41 = taxBracket(rateAt(0.41), forInterval(72617, 153783))
 let bracket45 = taxBracket(rateAt(0.45), forInterval(153783))
 
 let irBrackets = [bracket0, bracket14, bracket30, bracket41, bracket45]
-// map-reduce
-const ir = (amount) => irBrackets.map(tax => tax(amount)).reduce((sum, amount) => sum + amount, 0)
+const ir = (amount) => irBrackets.reduce((sum, tax) => sum + tax(amount), 0)
 
 exports.ir = ir
-exports.irBrackets = irBrackets;
 
 // try
 //const {ir} = require("./money-flow.js")
