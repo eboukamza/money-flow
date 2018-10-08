@@ -3,8 +3,8 @@ const {compose, pipe, map, sum, curry} = require('ramda');
 const rateAt = curry((rate, amount) => amount * rate)
 const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amount) - min, 0)
 const taxBracket = (rateAt, forInterval) => compose(rateAt, forInterval)
-const taxCollect = (amount) => (sum, tax) => sum + tax(amount);
 const netAfter = tax => amount => amount - tax(amount)
+const tax = taxBrackets => amount => compose(sum, map)(taxApply(amount), taxBrackets)
 const taxApply = curry((amount, tax) => tax(amount))
 
 let bracket0 = taxBracket(rateAt(0), forInterval(0, 9807))
@@ -14,16 +14,16 @@ let bracket41 = taxBracket(rateAt(0.41), forInterval(72617, 153783))
 let bracket45 = taxBracket(rateAt(0.45), forInterval(153783))
 
 let irBrackets = [bracket0, bracket14, bracket30, bracket41, bracket45]
-let ir = (amount) => irBrackets.reduce(taxCollect(amount), 0)
+let ir = tax(irBrackets)
 
-const irDividendes = amount => ir(rateAt(0.6)(amount))
+const irDividendes = pipe(rateAt(0.6), ir)
 const afterIrDividendes = netAfter(irDividendes)
 
 // IS
 const isBracket15 = taxBracket(rateAt(0.15), forInterval(0, 38120))
 const isBracket28 = taxBracket(rateAt(0.28), forInterval(38120))
 const isBrackets = [isBracket15, isBracket28];
-const is = (amount) => compose(sum, map)(taxApply(amount), isBrackets)
+const is = tax(isBrackets)
 const afterIs = netAfter(is)
 
 // CRGCRDS
@@ -34,14 +34,17 @@ const afterCrgCrds = netAfter(crgCrds)
 const flatTax = rateAt(0.3)
 const afterFlatTax = netAfter(flatTax)
 
-let withoutFlatTax = pipe(afterIs, afterCrgCrds, afterIrDividendes)
-let withFlatTax = pipe(afterIs, afterFlatTax);
+let withoutFlatTax = pipe(afterIs, afterCrgCrds, afterIrDividendes, Math.ceil)
+let withFlatTax = pipe(afterIs, afterFlatTax, Math.ceil);
 
 // and then
 const delta = (amount) => withoutFlatTax(amount) - withFlatTax(amount)
 
-exports.delta = delta
-
-// try
-//const {delta} = require("./money-flow.js")
-//delta(100000) // 4087.5941759999987
+module.exports = {
+    rateAt,
+    forInterval,
+    taxApply,
+    tax,
+    netAfter,
+    delta
+};

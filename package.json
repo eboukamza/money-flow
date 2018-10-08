@@ -4,7 +4,8 @@
   "description": "",
   "main": "money-flow.js",
   "scripts": {
-    "start": "node money-flow.js"
+    "start": "node money-flow.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "homepage": "https://github.com/eboukamza/money-flow#readme",
   "dependencies": {
     "ramda": "0.25.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0"
   }
 }
