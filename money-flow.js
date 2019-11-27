@@ -3,6 +3,7 @@ const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amo
 const taxBracket = (rate, interval) => amount => rate(interval(amount))
 const netAfter = tax => amount => amount - tax(amount)
 
+// IR
 const bracket0 = taxBracket(rateAt(0), forInterval(0, 9807))
 const bracket14 = taxBracket(rateAt(0.14), forInterval(9807, 27086))
 const bracket30 = taxBracket(rateAt(0.30), forInterval(27086, 72617))
@@ -14,7 +15,28 @@ const irBrackets = [bracket0, bracket14, bracket30, bracket41, bracket45]
 const ir = (amount) => irBrackets.reduce((sum, tax) => sum + tax(amount), 0)
 const netAfterIr = netAfter(ir)
 
+// IS
+const isBracket15 = taxBracket(rateAt(0.15), forInterval(0, 38120))
+const isBracket28 = taxBracket(rateAt(0.28), forInterval(38120))
+
+const isBrackets = [isBracket15, isBracket28]
+const is = (amount) => isBrackets.reduce((sum, tax) => sum + tax(amount), 0)
+const afterIs = netAfter(is)
+
+// CRG CRDS
+const crgCrds = rateAt(0.172)
+const afterCrgCrds = netAfter(crgCrds)
+
+// IR Dividendes
+const irDividendes = amount => ir(rateAt(0.6)(amount))
+const afterIrDividendes = netAfter(irDividendes)
+
+const allTaxes = [afterIs, afterCrgCrds, afterIrDividendes]
+const netAfterAllTaxes = (amount) =>  allTaxes.reduce((amount, tax) => tax(amount), amount)
+
+
 module.exports = {
   ir,
-  netAfterIr
+  netAfterIr,
+  netAfterAllTaxes
 }
