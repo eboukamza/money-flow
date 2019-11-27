@@ -15,7 +15,6 @@ const bracket45 = taxBracket(rateAt(0.45), forInterval(153783))
 const irBrackets = [bracket0, bracket14, bracket30, bracket41, bracket45]
 
 const ir = tax(irBrackets)
-const netAfterIr = netAfter(ir)
 
 // IS
 const isBracket15 = taxBracket(rateAt(0.15), forInterval(0, 38120))
@@ -33,12 +32,15 @@ const afterCrgCrds = netAfter(crgCrds)
 const irDividendes = amount => ir(rateAt(0.6)(amount))
 const afterIrDividendes = netAfter(irDividendes)
 
-const allTaxes = [afterIs, afterCrgCrds, afterIrDividendes]
-const netAfterAllTaxes = (amount) =>  allTaxes.reduce(taxApply, amount)
+// Flat Tax
+const flatTax = rateAt(0.3)
+const afterFlatTax = netAfter(flatTax)
 
+const withoutFlatTax = [afterIs, afterCrgCrds, afterIrDividendes, Math.ceil]
+const withFlatTax = [afterIs, afterFlatTax, Math.ceil]
+
+const delta = (amount) => withoutFlatTax.reduce(taxApply, amount) - withFlatTax.reduce(taxApply, amount)
 
 module.exports = {
-  ir,
-  netAfterIr,
-  netAfterAllTaxes
+  delta
 }

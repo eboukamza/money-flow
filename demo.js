@@ -1,3 +1,4 @@
-const {netAfterAllTaxes} = require("./money-flow.js")
+const {delta} = require("./money-flow.js")
 
-console.log('netAfterAllTaxes(100000)', '=>', netAfterAllTaxes(100000))
+for(let i = 0; i < 500000; i += 1000) console.log(i + "," + delta(i))
+
