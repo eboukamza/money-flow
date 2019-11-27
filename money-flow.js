@@ -1,10 +1,11 @@
-const {compose, pipe, sum, map} = require('ramda')
+const {compose, pipe, sum, map, curry} = require('ramda')
 
-const rateAt = rate => amount => amount * rate
+
+const rateAt = curry((rate, amount) => amount * rate)
 const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amount) - min, 0)
 const taxBracket = (rate, interval) => compose(rate, interval)
 const netAfter = tax => amount => amount - tax(amount)
-const taxApply = amount => tax => tax(amount)
+const taxApply = curry((amount, tax) => tax(amount))
 const tax = taxBrackets => amount => compose(sum, map)(taxApply(amount), taxBrackets)
 
 // IR
