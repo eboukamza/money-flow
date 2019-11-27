@@ -1,0 +1,22 @@
+{
+  "name": "money-flow",
+  "version": "1.0.0",
+  "private": true,
+  "main": "money-flow.js",
+  "scripts": {
+    "start": "node money-flow.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eboukamza/money-flow.git"
+  },
+  "author": "Elias Zain",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eboukamza/money-flow/issues"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0"
+  }
+}
