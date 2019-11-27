@@ -1,12 +1,5 @@
-const {compose, pipe, sum, map, curry} = require('ramda')
-
-
-const rateAt = curry((rate, amount) => amount * rate)
-const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amount) - min, 0)
-const taxBracket = (rate, interval) => compose(rate, interval)
-const netAfter = tax => amount => amount - tax(amount)
-const taxApply = curry((amount, tax) => tax(amount))
-const tax = taxBrackets => amount => compose(sum, map)(taxApply(amount), taxBrackets)
+const {pipe} = require('ramda')
+const {rateAt, forInterval, taxBracket, netAfter, tax, } = require('finlambda')
 
 // IR
 const bracket0 = taxBracket(rateAt(0), forInterval(0, 9807))

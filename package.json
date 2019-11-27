@@ -17,6 +17,7 @@
     "url": "https://github.com/eboukamza/money-flow/issues"
   },
   "dependencies": {
+    "finlambda": "1.0.0-beta.4",
     "ramda": "0.26.0"
   },
   "devDependencies": {
