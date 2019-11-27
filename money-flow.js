@@ -8,7 +8,8 @@ const bracket30 = taxBracket(rateAt(0.30), forInterval(27086, 72617))
 const bracket41 = taxBracket(rateAt(0.41), forInterval(72617, 153783))
 const bracket45 = taxBracket(rateAt(0.45), forInterval(153783))
 
-// trivial
-const ir = (amount) => bracket0(amount) + bracket14(amount) + bracket30(amount) + bracket41(amount) + bracket45(amount)
+// map-reduce
+const irBrackets = [bracket0, bracket14, bracket30, bracket41, bracket45]
+const ir = (amount) => irBrackets.map(tax => tax(amount)).reduce((sum, amount) => sum + amount, 0)
 
 module.exports = {ir}
