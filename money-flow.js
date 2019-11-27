@@ -1,6 +1,8 @@
+const {compose, pipe} = require('ramda')
+
 const rateAt = rate => amount => amount * rate
 const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amount) - min, 0)
-const taxBracket = (rate, interval) => amount => rate(interval(amount))
+const taxBracket = (rate, interval) => compose(rate, interval)
 const netAfter = tax => amount => amount - tax(amount)
 const tax = taxBrackets => amount => taxBrackets.reduce((sum, tax) => sum + tax(amount), 0)
 const taxApply = (amount, tax) => tax(amount)
@@ -29,17 +31,17 @@ const crgCrds = rateAt(0.172)
 const afterCrgCrds = netAfter(crgCrds)
 
 // IR Dividendes
-const irDividendes = amount => ir(rateAt(0.6)(amount))
+const irDividendes = pipe(rateAt(0.6), ir)
 const afterIrDividendes = netAfter(irDividendes)
 
 // Flat Tax
 const flatTax = rateAt(0.3)
 const afterFlatTax = netAfter(flatTax)
 
-const withoutFlatTax = [afterIs, afterCrgCrds, afterIrDividendes, Math.ceil]
-const withFlatTax = [afterIs, afterFlatTax, Math.ceil]
+const withoutFlatTax = pipe(afterIs, afterCrgCrds, afterIrDividendes, Math.ceil)
+const withFlatTax = pipe(afterIs, afterFlatTax, Math.ceil)
 
-const delta = (amount) => withoutFlatTax.reduce(taxApply, amount) - withFlatTax.reduce(taxApply, amount)
+const delta = (amount) => withoutFlatTax(amount) - withFlatTax(amount)
 
 module.exports = {
   delta

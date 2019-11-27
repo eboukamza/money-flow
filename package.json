@@ -16,6 +16,9 @@
   "bugs": {
     "url": "https://github.com/eboukamza/money-flow/issues"
   },
+  "dependencies": {
+    "ramda": "0.26.0"
+  },
   "devDependencies": {
     "jest": "^24.9.0"
   }
